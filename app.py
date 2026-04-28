@@ -20,26 +20,28 @@ st_Slope=st.selectbox("ST Slope",["UP","FLAT","DOWN"])
 if st.button("Predict"):
   raw_input={
     "Age":age,
-    "Resting BP":resting_BP,
+    "RestingBP":resting_BP,
     "Cholesterol":cholesterol,
-    "Fasting_BS":fasting_BS,
-    "MAX HR":maxHR,
-    "Old Peak":OldPeak,
-    "Sex"+ sex:1,
-    "Chest Pain Type"+ chest_pain:1,
-    "RestingECG"+ resting_ecg:1,
-    "Exercise Agina"+ ExerciseAgina:1,
-    "ST_Slope"+ st_Slope:1
+    "FastingBS":fasting_BS,
+    "MaxHR":maxHR,
+    "Oldpeak":OldPeak
   }
+  raw_input[f"Sex{sex}"] = 1
+  raw_input[f"ChestPainType{chest_pain}"] = 1
+  raw_input[f"RestingECG{resting_ecg}"] = 1
+  raw_input[f"ExerciseAngina{ExerciseAgina}"] = 1
+  raw_input[f"ST_Slope{st_Slope}"] = 1 
+  
   input_df=pd.DataFrame([raw_input])
   for col in expected_columns:
     if col not in input_df.columns:
       input_df[col]=0
   input_df=input_df[expected_columns]
   scaled_input=scaler.transform(input_df)
+  st.write(input_df)
   prediction=model.predict(scaled_input)[0]
-  if prediction==1:
-    st.error("High Risk of Heart Disease")
-  else:
+  if prediction==0:
     st.success("Low risk of Heart Disease")
+  else:
+    st.error("High risk of Heart Disease")
       
